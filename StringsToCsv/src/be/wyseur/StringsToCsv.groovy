@@ -2,15 +2,16 @@ package be.wyseur
 
 def separator = ";"
 def file = new XmlParser().parse(new File("D:\\projects\\Git\\photoframeKobe\\PhotoFrame\\res\\values\\strings.xml"));
-
-println("key\ten");
-file.string.each { 
-	println it.@name + separator + it.text()
-}
-file["string-array"].each{
-	def arr = it.@name
-	def i =0;
-	it.item.each{
-		println(arr + "." + (i++) + separator + it.text())
+new File("keys.csv").withWriter { out ->
+	out.writeLine "key" + separator + "en"
+	file.string.each { 
+		out.writeLine it.@name + separator + it.text()
+	}
+	file["string-array"].each{
+		def arr = it.@name
+		def i =0;
+		it.item.each{
+			out.writeLine arr + "." + (i++) + separator + it.text()
+		}
 	}
 }

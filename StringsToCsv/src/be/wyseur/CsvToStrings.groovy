@@ -1,42 +1,70 @@
 package be.wyseur
 
-println("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>")
-println("<resources>")
-
 def lists = [:]
+def outFiles = []
 
-new File("keys-cz.csv").splitEachLine(";") { fields ->
+new File("keys.csv").splitEachLine(";") { fields ->
 	if (fields[0]!='key'){
 		if (fields[0].contains('.')){
-			//println("list " + fields[0])
+			println("list " + fields[0])
 			def key = fields[0].tokenize('.')[0]
 			def pos = fields[0].tokenize('.')[1].toInteger()
 			if (!lists[key]){
-				lists[key] = [""]
-		}
-			//println("item " + pos + " " + fields[2])
-			if (lists[key].size() > pos){
-				lists[key].set(pos, fields[2])
-			}else{
-				while (lists[key].size() < pos){
-					lists[key].add("")
-				}
-				lists[key].add(fields[2])
+				lists[key] = []
+			}	
+			println("item " + pos + " " + fields[2])
+			while (lists[key].size() <= pos){
+				lists[key].add([])
+			}
+			for (i in 1..(fields.size()-1)){
+				//println(lists[key])
+				//println(lists[key][pos])
+				lists[key][pos].add(fields[i])
 			}
 		}else{
-			println("\t<string name=\""+fields[0]+"\">"+fields[2]+"</string>")
+			for (i in 1..(fields.size()-1)){
+				if (fields[i] != ''){
+					outFiles[i].write("\t<string name=\""+fields[0]+"\">"+fields[i]+"</string>\n");
+				}
+			}
 		}
 	}else{
+		for (i in 1..(fields.size()-1)){
+			if (fields[i] != ''){
+				new File("values-" + fields[i]).mkdir()
+				outFiles[i]=new OutputStreamWriter(new FileOutputStream("values-" + fields[i] + "/strings.xml"),"UTF-8");
+				outFiles[i].write("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\n")
+				outFiles[i].write("<resources>\n")
+			}
+		}
 		//println("Lang1=" + fields[1])
 		//println("Lang2=" + fields[2])
 	}
 }
 
 lists.each {
-	println("\t<string-array name=\""+it.key+"\">")
-	it.value.each{
-		println("\t\t<item>"+it+"</item>")
+	def key = it.key
+	outFiles.each {
+		if (it){
+			it.write("\t<string-array name=\""+key+"\">\n")
+		}
 	}
-	println("\t</string-array>")
+	it.value.each{
+		for (i in 1..(it.size())){
+			outFiles[i].write("\t\t<item>"+it[i-1]+"</item>\n")
+		}
+	}
+	outFiles.each {
+		if (it){
+			it.write("\t</string-array>\n")
+		}
+	}
 }
-println("</resources>")
+
+
+outFiles.each {
+	if (it){
+		it.write("</resources>\n")
+		it.close()
+	}
+}
