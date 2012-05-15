@@ -1,2 +1,4 @@
 
 /StringsToCsv/bin
+/StringsToCsv/*.csv
+/StringsToCsv/values*/
