@@ -4,7 +4,7 @@ def separator = ";"
 def langs = []
 def values = [:]
 
-def folder = new File("D:\\projects\\Git\\photoframeKobe\\PhotoFrame\\res\\")
+def folder = new File("C:\\dev\\git\\iframe\\res\\")
 folder.eachFile() { file->  
 	if (file.name.startsWith("values")){
 		def parts = file.name.tokenize('-')

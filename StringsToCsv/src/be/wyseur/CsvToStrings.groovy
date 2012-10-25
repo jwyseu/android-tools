@@ -23,16 +23,19 @@ new File("keys.csv").splitEachLine(";") { fields ->
 			}
 		}else{
 			for (i in 1..(fields.size()-1)){
-				if (fields[i] != ''){
+				println(i + " " + fields[0] + " = " + fields[i])
+				if (fields[i] != '' && i>0){
 					outFiles[i].write("\t<string name=\""+fields[0]+"\">"+fields[i]+"</string>\n");
 				}
 			}
 		}
 	}else{
+		println("Init files");
 		for (i in 1..(fields.size()-1)){
 			if (fields[i] != ''){
+				println("Init " + fields[i]);
 				new File("values-" + fields[i]).mkdir()
-				outFiles[i]=new OutputStreamWriter(new FileOutputStream("values-" + fields[i] + "/strings.xml"),"UTF-8");
+				outFiles[i]=new OutputStreamWriter(new FileOutputStream("C:\\dev\\git\\iframe\\res\\values-" + fields[i] + "/strings.xml"),"UTF-8");
 				outFiles[i].write("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\n")
 				outFiles[i].write("<resources>\n")
 			}
