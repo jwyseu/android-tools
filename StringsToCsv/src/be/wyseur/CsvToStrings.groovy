@@ -22,9 +22,13 @@ new File("keys.csv").splitEachLine(";") { fields ->
 				lists[key][pos].add(fields[i])
 			}
 		}else{
-			for (i in 1..(fields.size()-1)){
-				if (fields[i] != ''){
-					outFiles[i].write("\t<string name=\""+fields[0]+"\">"+fields[i]+"</string>\n");
+			if (fields.size() == 1){
+				outFiles[1].write("\t<string name=\""+fields[0]+"\"> </string>\n");
+			}else{
+				for (i in 1..(fields.size()-1)){
+					if (fields[i] && fields[i] != ''){
+						outFiles[i].write("\t<string name=\""+fields[0]+"\">"+fields[i]+"</string>\n");
+					}
 				}
 			}
 		}
