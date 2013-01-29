@@ -3,7 +3,7 @@ package be.wyseur
 def lists = [:]
 def outFiles = []
 
-new File("keys.csv").splitEachLine(";") { fields ->
+new File("iframe-strings.csv").splitEachLine(";") { fields ->
 	if (fields[0]!='key'){
 		if (fields[0].contains('.')){
 			println("list " + fields[0])
@@ -11,7 +11,7 @@ new File("keys.csv").splitEachLine(";") { fields ->
 			def pos = fields[0].tokenize('.')[1].toInteger()
 			if (!lists[key]){
 				lists[key] = []
-			}	
+			}
 			println("item " + pos + " " + fields[2])
 			while (lists[key].size() <= pos){
 				lists[key].add([])
@@ -24,8 +24,10 @@ new File("keys.csv").splitEachLine(";") { fields ->
 		}else{
 			for (i in 1..(fields.size()-1)){
 				println(i + " " + fields[0] + " = " + fields[i])
-				if (fields[i] != '' && i>0){
+				if (fields[i] != null && fields[i] != '' && i>0){
 					outFiles[i].write("\t<string name=\""+fields[0]+"\">"+fields[i]+"</string>\n");
+				}else if (fields[i] == null && i == 1){
+					outFiles[i].write("\t<string name=\""+fields[0]+"\"></string>\n");
 				}
 			}
 		}
@@ -35,7 +37,11 @@ new File("keys.csv").splitEachLine(";") { fields ->
 			if (fields[i] != ''){
 				println("Init " + fields[i]);
 				new File("values-" + fields[i]).mkdir()
-				outFiles[i]=new OutputStreamWriter(new FileOutputStream("C:\\dev\\git\\iframe\\res\\values-" + fields[i] + "/strings.xml"),"UTF-8");
+				if (fields[i] == 'en'){
+					outFiles[i]=new OutputStreamWriter(new FileOutputStream("C:\\dev\\git\\iframe\\res\\values/strings.xml"),"UTF-8");
+				}else{
+					outFiles[i]=new OutputStreamWriter(new FileOutputStream("C:\\dev\\git\\iframe\\res\\values-" + fields[i] + "/strings.xml"),"UTF-8");
+				}
 				outFiles[i].write("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\n")
 				outFiles[i].write("<resources>\n")
 			}
